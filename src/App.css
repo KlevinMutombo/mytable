@@ -1,38 +1,12 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.App { padding:20px; font-family:sans-serif; }
+.main-title { margin-bottom:20px; }
+.player-title { margin-bottom:15px; }
+h3 { margin-top:15px; margin-bottom:15px; }
+.controls { display:flex; gap:15px; align-items:center; margin-bottom:25px; }
+.controls label { font-size:0.95em; }
+.stats-table { width:100%; border-collapse:collapse; margin-bottom:25px; font-size:0.95em; }
+.stats-table th, .stats-table td { border:1px solid #ddd; padding:6px; text-align:center; }
+.stats-table th { background:#111; color:#fff; }
+.charts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:25px; justify-items:center; margin-bottom:25px; }
+.metric-selector { display:flex; align-items:center; gap:15px; margin-bottom:10px; }
+.footer { margin-top:30px; font-size:0.8em; color:#666; text-align:center; }
