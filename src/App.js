@@ -14,14 +14,14 @@ function App() {
 
   const labels = {
     en: {
-      title: 'Klevin Basketball League',
+      title: 'Klevin Basketball League Statistics',
       season: 'Season', last10: 'Last 10 Games', bySeason: 'By Season', last10Opt: 'Last 10 Games',
-      filters: 'Filters: ', player: 'Player: ', metric: 'Metric: ', pts: 'Points', ast: 'Assists', reb: 'Rebounds', pie: 'Distribution'
+      filters: 'Filters: ', player: 'Player: ', metric: 'Metric: ', pts: 'Points Per Game ', ast: 'Assists Per Game', reb: 'Rebounds Per Game', pie: 'Distribution (Avg All Time)'
     },
     fr: {
       title: 'Ligue de basketball de Klevin',
       season: 'Saison', last10: '10 Derniers matchs', bySeason: 'Par Saison', last10Opt: '10 Derniers',
-      filters: 'Filtres : ', player: 'Joueur : ', metric: 'Métrique : ', pts: 'Points', ast: 'Passes', reb: 'Rebonds', pie: 'Répartition'
+      filters: 'Filtres : ', player: 'Joueur : ', metric: 'Métrique : ', pts: 'Points par match', ast: 'Passes par match', reb: 'Rebonds par match', pie: 'Répartition (Moyenne carrière)'
     }
   };
   const colors = { PTS: '#8884d8', AST: '#82ca9d', REB: '#ffc658' };
@@ -29,6 +29,19 @@ function App() {
   const selected = players.find(p => p.name === player);
   const lbl = labels[lang];
 
+  // Calculate averages for season
+  const seasonAvg = selected.seasonStats.reduce(
+    (acc, s) => ({
+      PTS: acc.PTS + s.PTS,
+      AST: acc.AST + s.AST,
+      REB: acc.REB + s.DRB
+    }), { PTS: 0, AST: 0, REB: 0 }
+  );
+  seasonAvg.PTS /= selected.seasonStats.length;
+  seasonAvg.AST /= selected.seasonStats.length;
+  seasonAvg.REB /= selected.seasonStats.length;
+
+  // Prepare table rows
   const tableRows = timeFrame === 'season'
     ? selected.seasonStats
     : [{
@@ -40,24 +53,26 @@ function App() {
       REB: (selected.lastGamesREB.reduce((s,a)=>s+a,0) / selected.lastGamesREB.length).toFixed(1)
     }];
 
+  // Bar chart data
   const barData = timeFrame === 'season'
     ? selected.seasonStats.map(s => ({ name: s.season, PTS: s.PTS, AST: s.AST, REB: s.DRB }))
     : [{ name: lbl.last10, PTS: tableRows[0].PTS, AST: tableRows[0].AST, REB: tableRows[0].REB }];
 
+  // Line chart data
   const lineData = timeFrame === 'season'
     ? barData.map(d => ({ name: d.name, value: d[metric] }))
     : selected[`lastGames${metric}`].map((v,i) => ({ name: `G${i+1}`, value: v }));
 
-  const lastSeason = selected.seasonStats.slice(-1)[0];
+  // Pie chart data
   const last10Sum = {
     PTS: selected.lastGamesPTS.reduce((s,a)=>s+a,0),
     AST: selected.lastGamesAST.reduce((s,a)=>s+a,0),
     REB: selected.lastGamesREB.reduce((s,a)=>s+a,0)
   };
   const pieData = [
-    { name: lbl.pts, value: timeFrame==='season'?lastSeason.PTS:last10Sum.PTS },
-    { name: lbl.ast, value: timeFrame==='season'?lastSeason.AST:last10Sum.AST },
-    { name: lbl.reb, value: timeFrame==='season'?lastSeason.DRB:last10Sum.REB }
+    { name: lbl.pts, value: timeFrame==='season' ? seasonAvg.PTS : last10Sum.PTS },
+    { name: lbl.ast, value: timeFrame==='season' ? seasonAvg.AST : last10Sum.AST },
+    { name: lbl.reb, value: timeFrame==='season' ? seasonAvg.REB : last10Sum.REB }
   ];
 
   return (
@@ -85,7 +100,7 @@ function App() {
       <table className="stats-table">
         <thead>
           <tr>
-            <th>{timeFrame==='season'?lbl.season:lbl.last10}</th>
+            <th>{timeFrame==='season' ? lbl.season : lbl.last10}</th>
             <th>GP</th><th>MIN</th><th>{lbl.pts}</th><th>{lbl.ast}</th><th>{lbl.reb}</th>
           </tr>
         </thead>
@@ -105,7 +120,7 @@ function App() {
           <h3>{lang==='en'?'Bar Chart':'Graphique en barres'}</h3>
           <BarChart width={350} height={220} data={barData} margin={{ top:10,right:10,left:10,bottom:10 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" interval={0} />
             <YAxis />
             <Tooltip />
             <Legend />
@@ -128,7 +143,7 @@ function App() {
           </div>
           <LineChart width={350} height={220} data={lineData} margin={{ top:10,right:10,left:10,bottom:10 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" interval={0} />
             <YAxis />
             <Tooltip />
             <Legend />
@@ -138,7 +153,7 @@ function App() {
 
         <div>
           <h3>{lbl.pie}</h3>
-          <PieChart width={350} height={220} margin={{ top:10,right:10,left:10,bottom:10 }}>
+          <PieChart width={350} height={220}>
             <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={80} label>
               {pieData.map((entry,i)=><Cell key={i} fill={colors[Object.keys(colors)[i]]} />)}
             </Pie>
