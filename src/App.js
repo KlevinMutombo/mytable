@@ -21,7 +21,7 @@ function App() {
   // Définition des libellés en anglais et en français
   const labels = {
     en: {
-      title: 'Klevin Basketball League Statistics',
+      title: 'AT Basketball League Statistics',
       season: 'Season', last10: 'Last 10 Games', bySeason: 'By Season', last10Opt: 'Last 10 Games',
       filters: 'Filters: ', player: 'Player: ', metric: 'Metric: ', pts: 'Points Per Game ', ast: 'Assists Per Game', reb: 'Rebounds Per Game', pie: 'Distribution (Avg All Time)'
     },
