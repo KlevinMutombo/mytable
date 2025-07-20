@@ -21,12 +21,12 @@ function App() {
   // Définition des libellés en anglais et en français
   const labels = {
     en: {
-      title: 'AT Basketball League Statistics',
+      title: 'AT Basketball League',
       season: 'Season', last10: 'Last 10 Games', bySeason: 'By Season', last10Opt: 'Last 10 Games',
       filters: 'Filters: ', player: 'Player: ', metric: 'Metric: ', pts: 'Points Per Game ', ast: 'Assists Per Game', reb: 'Rebounds Per Game', pie: 'Distribution (Avg All Time)'
     },
     fr: {
-      title: 'Ligue de basketball de Klevin',
+      title: 'Ligue de basketball AT',
       season: 'Saison', last10: '10 Derniers matchs', bySeason: 'Par Saison', last10Opt: '10 Derniers',
       filters: 'Filtres : ', player: 'Joueur : ', metric: 'Métrique : ', pts: 'Points par match', ast: 'Passes par match', reb: 'Rebonds par match', pie: 'Répartition (Moyenne carrière)'
     }
